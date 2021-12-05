@@ -2069,9 +2069,9 @@ public class CoffeeStore {
 
 本节要介绍的抽象工厂模式将考虑多等级产品的生产，将同一个具体工厂所生产的位于不同等级的一组产品称为一个产品族，下图所示横轴是产品等级，也就是同一类产品；纵轴是产品族，也就是同一品牌的产品，同一品牌的产品产自同一个工厂。
 
-<img src="D:/githubWorkSpace/designPattern/新建文件夹/笔记/img/image-20200401214509176.png" style="zoom:67%;" />
+<img src="img/image-20200401214509176.png" style="zoom:67%;" />
 
-<img src="D:/githubWorkSpace/designPattern/新建文件夹/笔记/img/image-20200401222951963.png" style="zoom:67%;" />
+<img src="img/image-20200401222951963.png" style="zoom:67%;" />
 
 #### 4.2.4.1 概念
 
@@ -2092,7 +2092,7 @@ public class CoffeeStore {
 
 现咖啡店业务发生改变，不仅要生产咖啡还要生产甜点，如提拉米苏、抹茶慕斯等，要是按照工厂方法模式，需要定义提拉米苏类、抹茶慕斯类、提拉米苏工厂、抹茶慕斯工厂、甜点工厂类，很容易发生类爆炸情况。其中拿铁咖啡、美式咖啡是一个产品等级，都是咖啡；提拉米苏、抹茶慕斯也是一个产品等级；拿铁咖啡和提拉米苏是同一产品族（也就是都属于意大利风味），美式咖啡和抹茶慕斯是同一产品族（也就是都属于美式风味）。所以这个案例可以使用抽象工厂模式实现。类图如下：
 
-<img src="D:/githubWorkSpace/designPattern/新建文件夹/笔记/img/抽象工厂模式.png" style="zoom:67%;" />
+<img src="img/抽象工厂模式.png" style="zoom:67%;" />
 
 代码如下：
 
@@ -2178,10 +2178,21 @@ latte=com.itheima.pattern.factory.config_factory.LatteCoffee
 第二步：改进工厂类
 
 ```java
+package com.jolan.pattern.factory.config_factory;
+
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
 public class CoffeeFactory {
 
+    //加载配置文件，获取配置文件中配置的全类名，并创建该类的对象进行存储
+    //定义容器对象存储咖啡类型
     private static Map<String,Coffee> map = new HashMap();
 
+    //加载配置文件，只需要加载一次
     static {
         Properties p = new Properties();
         InputStream is = CoffeeFactory.class.getClassLoader().getResourceAsStream("bean.properties");
@@ -2203,11 +2214,34 @@ public class CoffeeFactory {
     }
 
     public static Coffee createCoffee(String name) {
-
         return map.get(name);
     }
 }
 ```
+
+**Client**
+
+```java
+package com.jolan.pattern.factory.config_factory;
+
+/**
+ * @author jolan80
+ * @date 2021-12-05 21:14
+ */
+public class Client {
+    public static void main(String[] args) {
+        Coffee american = CoffeeFactory.createCoffee("american");
+        System.out.println(american.getName());
+
+        System.out.println("========");
+
+        Coffee latte = CoffeeFactory.createCoffee("latte");
+        System.out.println(latte.getName());
+    }
+}
+```
+
+
 
 静态成员变量用来存储创建的对象（键存储的是名称，值存储的是对应的对象），而读取配置文件以及创建对象写在静态代码块中，目的就是只需要执行一次。
 
@@ -2236,7 +2270,7 @@ public class Demo {
 
 对上面的代码大家应该很熟，使用迭代器遍历集合，获取集合中的元素。而单列集合获取迭代器的方法就使用到了工厂方法模式。我们看通过类图看看结构：
 
-<img src="D:/githubWorkSpace/designPattern/新建文件夹/笔记/img/JDK源码解析.png" style="zoom:75%;" />
+<img src="img/JDK源码解析.png" style="zoom:75%;" />
 
 Collection接口是抽象工厂类，ArrayList是具体的工厂类；Iterator接口是抽象商品类，ArrayList类中的Iter内部类是具体的商品类。在具体的工厂类中iterator()方法创建具体的商品类的对象。
 
@@ -2264,7 +2298,7 @@ Collection接口是抽象工厂类，ArrayList是具体的工厂类；Iterator�
 
 接口类图如下：
 
-![](D:/githubWorkSpace/designPattern/新建文件夹/笔记/img/原型模式.png)
+![](img/原型模式.png)
 
 ### 4.3.3 实现
 
@@ -2279,31 +2313,46 @@ Java中的Object类中提供了 `clone()` 方法来实现浅克隆。 Cloneable 
 **Realizetype（具体的原型类）：**
 
 ```java
-public class Realizetype implements Cloneable {
+package com.jolan.pattern.prototype.demo;
 
+/**
+ * @author jolan80
+ * @date 2021-12-05 21:28
+ */
+public class Realizetype implements Cloneable{
     public Realizetype() {
         System.out.println("具体的原型对象创建完成！");
     }
 
     @Override
-    protected Realizetype clone() throws CloneNotSupportedException {
+    public Realizetype clone() throws CloneNotSupportedException {
         System.out.println("具体原型复制成功！");
         return (Realizetype) super.clone();
     }
 }
+
 ```
 
-**PrototypeTest（测试访问类）：**
+**Client（测试访问类）：**
 
 ```java
-public class PrototypeTest {
-    public static void main(String[] args) throws CloneNotSupportedException {
-        Realizetype r1 = new Realizetype();
-        Realizetype r2 = r1.clone();
+package com.jolan.pattern.prototype.demo;
 
-        System.out.println("对象r1和r2是同一个对象？" + (r1 == r2));
+/**
+ * @author jolan80
+ * @date 2021-12-05 21:30
+ */
+public class Client {
+    public static void main(String[] args) throws Exception{
+        //创建一个原型类对象
+        Realizetype realizetype = new Realizetype();
+        //调用Realizetype类中的clone()方法进行克隆对象
+        Realizetype clone = realizetype.clone();
+        System.out.println("原型对象和克隆出来的对象是同一个对象？" + (realizetype == clone));
+
     }
 }
+
 ```
 
 ### 4.3.4 案例
@@ -2314,7 +2363,7 @@ public class PrototypeTest {
 
 类图如下：
 
-<img src="D:/githubWorkSpace/designPattern/新建文件夹/笔记/img/原型模式1.png" style="zoom:80%;" />
+<img src="img/原型模式1.png" style="zoom:80%;" />
 
 代码如下：
 
@@ -2341,9 +2390,19 @@ public class Citation implements Cloneable {
     }
 }
 
-//测试访问类
+
+```
+
+```java
+package com.jolan.pattern.prototype.test;
+
+/**
+ * @author jolan80
+ * @date 2021-12-05 21:41
+ */
 public class CitationTest {
     public static void main(String[] args) throws CloneNotSupportedException {
+        //创建原型对象
         Citation c1 = new Citation();
         c1.setName("张三");
 
@@ -2445,27 +2504,35 @@ public class CitationTest {
 
 运行结果为：
 
-<img src="D:/githubWorkSpace/designPattern/新建文件夹/笔记/img/原型模式2.png" style="zoom:80%;" />
+<img src="img/原型模式2.png" style="zoom:80%;" />
 
 <font color="red">说明：</font>
 
-​	stu对象和stu1对象是同一个对象，就会产生将stu1对象中name属性值改为“李四”，两个Citation（奖状）对象中显示的都是李四。这就是浅克隆的效果，对具体原型类（Citation）中的引用类型的属性进行引用的复制。这种情况需要使用深克隆，而进行深克隆需要使用对象流。代码如下：
+​	stu对象和stu1对象是同一个对象，就会产生将stu1对象中name属性值改为“李四”，两个Citation（奖状）对象中显示的都是李四。这就是浅克隆的效果，对具体原型类（Citation）中的引用类型的属性进行引用的复制。这种情况需要使用深克隆，而进行深克隆需要使用对象流。代码如下（Student和Citation对象需要实现序列化接口，否则报错）：
 
 ```java
-public class CitationTest1 {
+package com.jolan.pattern.prototype.test3;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+//测试类
+public class CitationTest {
     public static void main(String[] args) throws Exception {
         Citation c1 = new Citation();
         Student stu = new Student("张三", "西安");
         c1.setStu(stu);
 
         //创建对象输出流对象
-        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("C:\\Users\\Think\\Desktop\\b.txt"));
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("a.txt"));
         //将c1对象写出到文件中
         oos.writeObject(c1);
         oos.close();
 
         //创建对象出入流对象
-        ObjectInputStream ois = new ObjectInputStream(new FileInputStream("C:\\Users\\Think\\Desktop\\b.txt"));
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream("a.txt"));
         //读取对象
         Citation c2 = (Citation) ois.readObject();
         //获取c2奖状所属学生对象
@@ -2483,7 +2550,7 @@ public class CitationTest1 {
 
 运行结果为：
 
-<img src="D:/githubWorkSpace/designPattern/新建文件夹/笔记/img/原型模式3.png" style="zoom:80%;" />
+<img src="img/原型模式3.png" style="zoom:80%;" />
 
 > 注意：Citation类和Student类必须实现Serializable接口，否则会抛NotSerializableException异常。
 
@@ -2495,7 +2562,7 @@ public class CitationTest1 {
 
 将一个复杂对象的构建与表示分离，使得同样的构建过程可以创建不同的表示。
 
-<img src="D:/githubWorkSpace/designPattern/新建文件夹/笔记/img/image-20200413225341516.png" style="zoom:60%;" />
+<img src="img/image-20200413225341516.png" style="zoom:60%;" />
 
 * 分离了部件的构造(由Builder来负责)和装配(由Director负责)。 从而可以构造出复杂的对象。这个模式适用于：某个对象的构建过程复杂的情况。
 * 由于实现了构建和装配的解耦。不同的构建器，相同的装配，也可以做出不同的对象；相同的构建器，不同的装配顺序也可以做出不同的对象。也就是实现了构建算法、装配算法的解耦，实现了更好的复用。
@@ -2517,7 +2584,7 @@ public class CitationTest1 {
 
 类图如下：
 
-<img src="D:/githubWorkSpace/designPattern/新建文件夹/笔记/img/建造者模式.png" style="zoom:80%;" />
+<img src="img/建造者模式.png" style="zoom:80%;" />
 
 
 
