@@ -2596,7 +2596,7 @@ public class CitationTest {
 
 这里Bike是产品，包含车架，车座等组件；Builder是抽象建造者，MobikeBuilder和OfoBuilder是具体的建造者；Director是指挥者。类图如下：
 
-<img src="D:/githubWorkSpace/designPattern/新建文件夹/笔记/img/建造者模式1.png" style="zoom:80%;" />
+<img src="img/建造者模式1.png" style="zoom:80%;" />
 
 具体的代码如下：
 
