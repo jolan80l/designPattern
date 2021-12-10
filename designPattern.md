@@ -3479,7 +3479,7 @@ public class Client {
 
 我们使用对象适配器模式将读卡器的案例进行改写。类图如下：
 
-<img src="D:/workspace/designPattern/新建文件夹/笔记/img/对象适配器模式.png" style="zoom:80%;" />
+<img src="img/对象适配器模式.png" style="zoom:80%;" />
 
 代码如下：
 
@@ -3551,7 +3551,7 @@ public int read(char cbuf[], int offset, int length) throws IOException {
 
 如上代码中的sd（StreamDecoder类对象），在Sun的JDK实现中，实际的方法实现是对sun.nio.cs.StreamDecoder类的同名方法的调用封装。类结构图如下：
 
-![](D:/workspace/designPattern/新建文件夹/笔记/img/适配器模式-jdk源码解析.png)
+![](img/适配器模式-jdk源码解析.png)
 
 从上图可以看出：
 
@@ -3572,7 +3572,7 @@ public int read(char cbuf[], int offset, int length) throws IOException {
 
 快餐店有炒面、炒饭这些快餐，可以额外附加鸡蛋、火腿、培根这些配菜，当然加配菜需要额外加钱，每个配菜的价钱通常不太一样，那么计算总价就会显得比较麻烦。
 
-<img src="D:/传智播客/专题/设计模式/成品/笔记/assets/装饰者模式-使用前.png" style="zoom:80%;" />
+<img src="img/装饰者模式-使用前.png" style="zoom:80%;" />
 
 使用继承的方式存在的问题：
 
@@ -3603,7 +3603,7 @@ public int read(char cbuf[], int offset, int length) throws IOException {
 
 类图如下：
 
-<img src="D:/workspace/designPattern/新建文件夹/笔记/img/装饰者模式.png" style="zoom:75%;" />
+<img src="img/装饰者模式.png" style="zoom:75%;" />
 
 代码如下：
 
@@ -3691,7 +3691,7 @@ public class Egg extends Garnish {
     }
 
     public float cost() {
-        return getPrice() + getFastFood().getPrice();
+        return getPrice() + getFastFood().cost();
     }
 
     @Override
@@ -3710,7 +3710,7 @@ public class Bacon extends Garnish {
 
     @Override
     public float cost() {
-        return getPrice() + getFastFood().getPrice();
+        return getPrice() + getFastFood().cost();
     }
 
     @Override
@@ -3792,7 +3792,7 @@ public class Demo {
 
 使用起来感觉确实像是装饰者模式，接下来看它们的结构：
 
-<img src="D:/workspace/designPattern/新建文件夹/笔记/img/装饰者模式-jdk源码.png" style="zoom:80%;" />
+<img src="img/装饰者模式-jdk源码.png" style="zoom:80%;" />
 
 > <font color="red">小结：</font>
 >
