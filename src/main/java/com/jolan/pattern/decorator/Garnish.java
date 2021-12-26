@@ -6,7 +6,7 @@ package com.jolan.pattern.decorator;
  * 装饰者类，抽象装饰者角色
  */
 public abstract class Garnish extends FastFood{
-    //生命快餐类的变量
+    //声明快餐类的变量
     private FastFood fastFood;
 
     public FastFood getFastFood() {

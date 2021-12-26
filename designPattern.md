@@ -849,7 +849,7 @@ public class ComputerDemo {
 
 客户端不应该被迫依赖于它不使用的方法；一个类对另一个类的依赖应该建立在最小的接口上。
 
-![](img/1  .png)
+![](img/1.png)
 
 下面看一个例子来理解接口隔离原则
 
@@ -1158,11 +1158,11 @@ public class Client {
 
 汽车按“动力源”划分可分为汽油汽车、电动汽车等；按“颜色”划分可分为白色汽车、黑色汽车和红色汽车等。如果同时考虑这两种分类，其组合就很多。类图如下： 
 
-<img src="D:/githubWorkSpace/designPattern/新建文件夹/笔记/img/合成复用原则.png" alt="image-20191229173554296" style="zoom:80%;" />
+<img src="img/合成复用原则.png" alt="image-20191229173554296" style="zoom:80%;" />
 
 从上面类图我们可以看到使用继承复用产生了很多子类，如果现在又有新的动力源或者新的颜色的话，就需要再定义新的类。我们试着将继承复用改为聚合复用看一下。
 
-<img src="D:/githubWorkSpace/designPattern/新建文件夹/笔记/img/合成复用原则1.png" alt="image-20191229173554296" style="zoom:80%;" />
+<img src="img/合成复用原则1.png" alt="image-20191229173554296" style="zoom:80%;" />
 
 
 
@@ -1801,7 +1801,7 @@ Runtime类就是使用的单例设计模式。
 
 具体类的设计如下：
 
-<img src="D:/githubWorkSpace/designPattern/新建文件夹/笔记/img/工厂设计模式引入.png" style="zoom:80%;" />
+<img src="img/工厂设计模式引入.png" style="zoom:80%;" />
 
 ```java
 package com.jolan.pattern.factory.before;
@@ -1903,7 +1903,7 @@ public class LatteCoffee extends Coffee {
 
 现在使用简单工厂对上面案例进行改进，类图如下：
 
-<img src="D:/githubWorkSpace/designPattern/新建文件夹/笔记/img/简单工厂模式.png" style="zoom:70%;" />
+<img src="img/简单工厂模式.png" style="zoom:70%;" />
 
 工厂类代码如下：
 
@@ -2993,7 +2993,7 @@ public class Client {
 }
 ```
 
-从上面代码中可以看出测试类直接访问的是ProxyPoint类对象，也就是说ProxyPoint作为访问对象和目标对象的中介。同时也对sell方法进行了增强（代理点收取一些服务费用）。
+从上面代码中可以看出测试类直接访问的是ProxyPoint类对象，也就是说ProxyPoint作为访问对象和目标对象的中介。同时也对sell方法进行了增强（代理点收取一些服务费用）。	
 
 ### 5.1.4 JDK动态代理
 
@@ -3953,7 +3953,7 @@ public class Client {
 
 ​	外观（Facade）模式是“迪米特法则”的典型应用
 
-![](D:/workspace/designPattern/新建文件夹/笔记/img/外观模式引入.jpg)
+![](img/外观模式引入.jpg)
 
 
 
@@ -4094,4 +4094,394 @@ RequestFacade类就使用了外观模式。先看结构图：
 **为什么在此处使用外观模式呢？**
 
 ​	定义 RequestFacade 类，分别实现 ServletRequest ，同时定义私有成员变量 Request ，并且方法的实现调用 Request  的实现。然后，将 RequestFacade上转为 ServletRequest  传给 servlet 的 service 方法，这样即使在 servlet 中被下转为 RequestFacade ，也不能访问私有成员变量对象中的方法。既用了 Request ，又能防止其中方法被不合理的访问。
+
+## 5.6 组合模式
+
+### 5.6.1 概述
+
+<img src="/img/image-20200208180417291.png" style="zoom:60%;" />
+
+​	对于这个图片肯定会非常熟悉，上图我们可以看做是一个文件系统，对于这样的结构我们称之为树形结构。在树形结构中可以通过调用某个方法来遍历整个树，当我们找到某个叶子节点后，就可以对叶子节点进行相关的操作。可以将这颗树理解成一个大的容器，容器里面包含很多的成员对象，这些成员对象即可是容器对象也可以是叶子对象。但是由于容器对象和叶子对象在功能上面的区别，使得我们在使用的过程中必须要区分容器对象和叶子对象，但是这样就会给客户带来不必要的麻烦，作为客户而已，它始终希望能够一致的对待容器对象和叶子对象。
+
+**定义：**
+
+​	又名部分整体模式，是用于把一组相似的对象当作一个单一的对象。组合模式依据树形结构来组合对象，用来表示部分以及整体层次。这种类型的设计模式属于结构型模式，它创建了对象组的树形结构。
+
+
+
+### 5.6.2 结构
+
+组合模式主要包含三种角色：
+
+* 抽象根节点（Component）：定义系统各层次对象的共有方法和属性，可以预先定义一些默认行为和属性。
+* 树枝节点（Composite）：定义树枝节点的行为，存储子节点，组合树枝节点和叶子节点形成一个树形结构。
+* 叶子节点（Leaf）：叶子节点对象，其下再无分支，是系统层次遍历的最小单位。
+
+
+
+### 5.6.3 案例实现
+
+【例】软件菜单
+
+如下图，我们在访问别的一些管理系统时，经常可以看到类似的菜单。一个菜单可以包含菜单项（菜单项是指不再包含其他内容的菜单条目），也可以包含带有其他菜单项的菜单，因此使用组合模式描述菜单就很恰当，我们的需求是针对一个菜单，打印出其包含的所有菜单以及菜单项的名称。
+
+<img src="img/image-20200208182322313.png" style="zoom:80%;" />
+
+要实现该案例，我们先画出类图：
+
+<img src="img/组合模式.png" style="zoom:80%;" />
+
+**代码实现：**
+
+不管是菜单还是菜单项，都应该继承自统一的接口，这里姑且将这个统一的接口称为菜单组件。
+
+```java
+//菜单组件  不管是菜单还是菜单项，都应该继承该类
+public abstract class MenuComponent {
+
+    protected String name;
+    protected int level;
+
+    //添加菜单
+    public void add(MenuComponent menuComponent){
+        throw new UnsupportedOperationException();
+    }
+
+    //移除菜单
+    public void remove(MenuComponent menuComponent){
+        throw new UnsupportedOperationException();
+    }
+
+    //获取指定的子菜单
+    public MenuComponent getChild(int i){
+        throw new UnsupportedOperationException();
+    }
+
+    //获取菜单名称
+    public String getName(){
+        return name;
+    }
+
+    public void print(){
+        throw new UnsupportedOperationException();
+    }
+}
+```
+
+这里的MenuComponent定义为抽象类，因为有一些共有的属性和行为要在该类中实现，Menu和MenuItem类就可以只覆盖自己感兴趣的方法，而不用搭理不需要或者不感兴趣的方法，举例来说，Menu类可以包含子菜单，因此需要覆盖add()、remove()、getChild()方法，但是MenuItem就不应该有这些方法。这里给出的默认实现是抛出异常，你也可以根据自己的需要改写默认实现。
+
+```java
+public class Menu extends MenuComponent {
+
+    private List<MenuComponent> menuComponentList;
+
+    public Menu(String name,int level){
+        this.level = level;
+        this.name = name;
+        menuComponentList = new ArrayList<MenuComponent>();
+    }
+
+    @Override
+    public void add(MenuComponent menuComponent) {
+        menuComponentList.add(menuComponent);
+    }
+
+    @Override
+    public void remove(MenuComponent menuComponent) {
+        menuComponentList.remove(menuComponent);
+    }
+
+    @Override
+    public MenuComponent getChild(int i) {
+        return menuComponentList.get(i);
+    }
+
+    @Override
+    public void print() {
+
+        for (int i = 1; i < level; i++) {
+            System.out.print("--");
+        }
+        System.out.println(name);
+        for (MenuComponent menuComponent : menuComponentList) {
+            menuComponent.print();
+        }
+    }
+}
+```
+
+Menu类已经实现了除了getName方法的其他所有方法，因为Menu类具有添加菜单，移除菜单和获取子菜单的功能。
+
+```java
+public class MenuItem extends MenuComponent {
+
+    public MenuItem(String name,int level) {
+        this.name = name;
+        this.level = level;
+    }
+
+    @Override
+    public void print() {
+        for (int i = 1; i < level; i++) {
+            System.out.print("--");
+        }
+        System.out.println(name);
+    }
+}
+```
+
+MenuItem是菜单项，不能再有子菜单，所以添加菜单，移除菜单和获取子菜单的功能并不能实现。
+
+
+
+### 5.6.4 组合模式的分类
+
+在使用组合模式时，根据抽象构件类的定义形式，我们可将组合模式分为透明组合模式和安全组合模式两种形式。
+
+* 透明组合模式
+
+  透明组合模式中，抽象根节点角色中声明了所有用于管理成员对象的方法，比如在示例中 `MenuComponent` 声明了 `add`、`remove` 、`getChild` 方法，这样做的好处是确保所有的构件类都有相同的接口。透明组合模式也是组合模式的标准形式。
+
+  透明组合模式的缺点是不够安全，因为叶子对象和容器对象在本质上是有区别的，叶子对象不可能有下一个层次的对象，即不可能包含成员对象，因此为其提供 add()、remove() 等方法是没有意义的，这在编译阶段不会出错，但在运行阶段如果调用这些方法可能会出错（如果没有提供相应的错误处理代码）
+
+* 安全组合模式
+
+  在安全组合模式中，在抽象构件角色中没有声明任何用于管理成员对象的方法，而是在树枝节点 `Menu` 类中声明并实现这些方法。安全组合模式的缺点是不够透明，因为叶子构件和容器构件具有不同的方法，且容器构件中那些用于管理成员对象的方法没有在抽象构件类中定义，因此客户端不能完全针对抽象编程，必须有区别地对待叶子构件和容器构件。
+
+  <img src="img/组合模式-安全性.png" style="zoom:80%;" />
+
+
+
+### 5.6.5 优点
+
+* 组合模式可以清楚地定义分层次的复杂对象，表示对象的全部或部分层次，它让客户端忽略了层次的差异，方便对整个层次结构进行控制。
+* 客户端可以一致地使用一个组合结构或其中单个对象，不必关心处理的是单个对象还是整个组合结构，简化了客户端代码。
+* 在组合模式中增加新的树枝节点和叶子节点都很方便，无须对现有类库进行任何修改，符合“开闭原则”。
+* 组合模式为树形结构的面向对象实现提供了一种灵活的解决方案，通过叶子节点和树枝节点的递归组合，可以形成复杂的树形结构，但对树形结构的控制却非常简单。
+
+
+
+### 5.6.6 使用场景
+
+组合模式正是应树形结构而生，所以组合模式的使用场景就是出现树形结构的地方。比如：文件目录显示，多级目录呈现等树形结构数据的操作。
+
+
+
+## 5.7 享元模式
+
+### 5.7.1 概述
+
+**定义：**
+
+​	运用共享技术来有效地支持大量细粒度对象的复用。它通过共享已经存在的对象来大幅度减少需要创建的对象数量、避免大量相似对象的开销，从而提高系统资源的利用率。
+
+
+
+### 5.7.2 结构
+
+享元（Flyweight ）模式中存在以下两种状态：
+
+1. 内部状态，即不会随着环境的改变而改变的可共享部分。
+2. 外部状态，指随环境改变而改变的不可以共享的部分。享元模式的实现要领就是区分应用中的这两种状态，并将外部状态外部化。
+
+享元模式的主要有以下角色：
+
+* 抽象享元角色（Flyweight）：通常是一个接口或抽象类，在抽象享元类中声明了具体享元类公共的方法，这些方法可以向外界提供享元对象的内部数据（内部状态），同时也可以通过这些方法来设置外部数据（外部状态）。
+* 具体享元（Concrete Flyweight）角色 ：它实现了抽象享元类，称为享元对象；在具体享元类中为内部状态提供了存储空间。通常我们可以结合单例模式来设计具体享元类，为每一个具体享元类提供唯一的享元对象。
+* 非享元（Unsharable Flyweight)角色 ：并不是所有的抽象享元类的子类都需要被共享，不能被共享的子类可设计为非共享具体享元类；当需要一个非共享具体享元类的对象时可以直接通过实例化创建。
+* 享元工厂（Flyweight Factory）角色 ：负责创建和管理享元角色。当客户对象请求一个享元对象时，享元工厂检査系统中是否存在符合要求的享元对象，如果存在则提供给客户；如果不存在的话，则创建一个新的享元对象。
+
+
+
+### 5.7.3 案例实现
+
+【例】俄罗斯方块
+
+下面的图片是众所周知的俄罗斯方块中的一个个方块，如果在俄罗斯方块这个游戏中，每个不同的方块都是一个实例对象，这些对象就要占用很多的内存空间，下面利用享元模式进行实现。
+
+<img src="img/俄罗斯方块.jpeg" style="zoom:60%;" />
+
+
+
+**先来看类图：**
+
+<img src="img/享元模式.png" style="zoom:80%;" />
+
+**代码如下：**
+
+俄罗斯方块有不同的形状，我们可以对这些形状向上抽取出AbstractBox，用来定义共性的属性和行为。
+
+```java
+public abstract class AbstractBox {
+    public abstract String getShape();
+
+    public void display(String color) {
+        System.out.println("方块形状：" + this.getShape() + " 颜色：" + color);
+    }
+}
+```
+
+接下来就是定义不同的形状了，IBox类、LBox类、OBox类等。
+
+```java
+public class IBox extends AbstractBox {
+
+    @Override
+    public String getShape() {
+        return "I";
+    }
+}
+
+public class LBox extends AbstractBox {
+
+    @Override
+    public String getShape() {
+        return "L";
+    }
+}
+
+public class OBox extends AbstractBox {
+
+    @Override
+    public String getShape() {
+        return "O";
+    }
+}
+```
+
+提供了一个工厂类（BoxFactory），用来管理享元对象（也就是AbstractBox子类对象），该工厂类对象只需要一个，所以可以使用单例模式。并给工厂类提供一个获取形状的方法。
+
+```java
+public class BoxFactory {
+
+    private static HashMap<String, AbstractBox> map;
+
+    private BoxFactory() {
+        map = new HashMap<String, AbstractBox>();
+        AbstractBox iBox = new IBox();
+        AbstractBox lBox = new LBox();
+        AbstractBox oBox = new OBox();
+        map.put("I", iBox);
+        map.put("L", lBox);
+        map.put("O", oBox);
+    }
+
+    public static final BoxFactory getInstance() {
+        return SingletonHolder.INSTANCE;
+    }
+
+    private static class SingletonHolder {
+        private static final BoxFactory INSTANCE = new BoxFactory();
+    }
+
+    public AbstractBox getBox(String key) {
+        return map.get(key);
+    }
+}
+```
+
+
+
+### 5.7.5 优缺点和使用场景
+
+**1，优点**
+
+- 极大减少内存中相似或相同对象数量，节约系统资源，提供系统性能
+- 享元模式中的外部状态相对独立，且不影响内部状态
+
+**2，缺点：**
+
+为了使对象可以共享，需要将享元对象的部分状态外部化，分离内部状态和外部状态，使程序逻辑复杂
+
+**3，使用场景：**
+
+- 一个系统有大量相同或者相似的对象，造成内存的大量耗费。
+- 对象的大部分状态都可以外部化，可以将这些外部状态传入对象中。
+- 在使用享元模式时需要维护一个存储享元对象的享元池，而这需要耗费一定的系统资源，因此，应当在需要多次重复使用享元对象时才值得使用享元模式。
+
+
+
+### 5.7.6 JDK源码解析
+
+Integer类使用了享元模式。我们先看下面的例子：
+
+```java
+public class Demo {
+    public static void main(String[] args) {
+        Integer i1 = 127;
+        Integer i2 = 127;
+
+        System.out.println("i1和i2对象是否是同一个对象？" + (i1 == i2));
+
+        Integer i3 = 128;
+        Integer i4 = 128;
+
+        System.out.println("i3和i4对象是否是同一个对象？" + (i3 == i4));
+    }
+}
+```
+
+运行上面代码，结果如下：
+
+<img src="D:/githubWorkSpace/新建文件夹/笔记/img/image-20200208212930857.png" style="zoom:80%;" />
+
+为什么第一个输出语句输出的是true，第二个输出语句输出的是false？通过反编译软件进行反编译，代码如下：
+
+```java
+public class Demo {
+    public static void main(String[] args) {
+        Integer i1 = Integer.valueOf((int)127);
+        Integer i2 Integer.valueOf((int)127);
+        System.out.println((String)new StringBuilder().append((String)"i1\u548ci2\u5bf9\u8c61\u662f\u5426\u662f\u540c\u4e00\u4e2a\u5bf9\u8c61\uff1f").append((boolean)(i1 == i2)).toString());
+        Integer i3 = Integer.valueOf((int)128);
+        Integer i4 = Integer.valueOf((int)128);
+        System.out.println((String)new StringBuilder().append((String)"i3\u548ci4\u5bf9\u8c61\u662f\u5426\u662f\u540c\u4e00\u4e2a\u5bf9\u8c61\uff1f").append((boolean)(i3 == i4)).toString());
+    }
+}
+```
+
+上面代码可以看到，直接给Integer类型的变量赋值基本数据类型数据的操作底层使用的是 `valueOf()` ，所以只需要看该方法即可
+
+```java
+public final class Integer extends Number implements Comparable<Integer> {
+    
+	public static Integer valueOf(int i) {
+        if (i >= IntegerCache.low && i <= IntegerCache.high)
+            return IntegerCache.cache[i + (-IntegerCache.low)];
+        return new Integer(i);
+    }
+    
+    private static class IntegerCache {
+        static final int low = -128;
+        static final int high;
+        static final Integer cache[];
+
+        static {
+            int h = 127;
+            String integerCacheHighPropValue =
+                sun.misc.VM.getSavedProperty("java.lang.Integer.IntegerCache.high");
+            if (integerCacheHighPropValue != null) {
+                try {
+                    int i = parseInt(integerCacheHighPropValue);
+                    i = Math.max(i, 127);
+                    // Maximum array size is Integer.MAX_VALUE
+                    h = Math.min(i, Integer.MAX_VALUE - (-low) -1);
+                } catch( NumberFormatException nfe) {
+                }
+            }
+            high = h;
+            cache = new Integer[(high - low) + 1];
+            int j = low;
+            for(int k = 0; k < cache.length; k++)
+                cache[k] = new Integer(j++);
+            // range [-128, 127] must be interned (JLS7 5.1.7)
+            assert IntegerCache.high >= 127;
+        }
+
+        private IntegerCache() {}
+    }
+}
+```
+
+可以看到 `Integer` 默认先创建并缓存 `-128 ~ 127` 之间数的 `Integer` 对象，当调用 `valueOf` 时如果参数在 `-128 ~ 127` 之间则计算下标并从缓存中返回，否则创建一个新的 `Integer` 对象。
 
