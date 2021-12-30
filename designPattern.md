@@ -4099,7 +4099,7 @@ RequestFacade类就使用了外观模式。先看结构图：
 
 ### 5.6.1 概述
 
-<img src="/img/image-20200208180417291.png" style="zoom:60%;" />
+<img src="img/image-20200208180417291.png" style="zoom:60%;" />
 
 ​	对于这个图片肯定会非常熟悉，上图我们可以看做是一个文件系统，对于这样的结构我们称之为树形结构。在树形结构中可以通过调用某个方法来遍历整个树，当我们找到某个叶子节点后，就可以对叶子节点进行相关的操作。可以将这颗树理解成一个大的容器，容器里面包含很多的成员对象，这些成员对象即可是容器对象也可以是叶子对象。但是由于容器对象和叶子对象在功能上面的区别，使得我们在使用的过程中必须要区分容器对象和叶子对象，但是这样就会给客户带来不必要的麻烦，作为客户而已，它始终希望能够一致的对待容器对象和叶子对象。
 
@@ -4136,75 +4136,88 @@ RequestFacade类就使用了外观模式。先看结构图：
 不管是菜单还是菜单项，都应该继承自统一的接口，这里姑且将这个统一的接口称为菜单组件。
 
 ```java
-//菜单组件  不管是菜单还是菜单项，都应该继承该类
-public abstract class MenuComponent {
+package com.jolan.pattern.combination;
 
+/**
+ * 属于抽象根节点
+ */
+public abstract class MenuCompoent {
+    //菜单组件的名称
     protected String name;
+    //菜单组件的层级
     protected int level;
-
-    //添加菜单
-    public void add(MenuComponent menuComponent){
+    //添加子菜单
+    public void add(MenuCompoent menuCompoent){
+        throw new UnsupportedOperationException();
+    }
+    //移除子菜单
+    public void remove(MenuCompoent menuCompoent){
         throw new UnsupportedOperationException();
     }
 
-    //移除菜单
-    public void remove(MenuComponent menuComponent){
+    public MenuCompoent getChild(int index){
         throw new UnsupportedOperationException();
     }
 
-    //获取指定的子菜单
-    public MenuComponent getChild(int i){
-        throw new UnsupportedOperationException();
-    }
-
-    //获取菜单名称
+    //获取菜单或者菜单项的名称
     public String getName(){
         return name;
     }
 
-    public void print(){
-        throw new UnsupportedOperationException();
-    }
+    //打印菜单名称(包含子菜单和子菜单项 )
+    public abstract void print();
 }
+
 ```
 
 这里的MenuComponent定义为抽象类，因为有一些共有的属性和行为要在该类中实现，Menu和MenuItem类就可以只覆盖自己感兴趣的方法，而不用搭理不需要或者不感兴趣的方法，举例来说，Menu类可以包含子菜单，因此需要覆盖add()、remove()、getChild()方法，但是MenuItem就不应该有这些方法。这里给出的默认实现是抛出异常，你也可以根据自己的需要改写默认实现。
 
 ```java
-public class Menu extends MenuComponent {
+package com.jolan.pattern.combination;
 
-    private List<MenuComponent> menuComponentList;
+import com.sun.org.apache.xerces.internal.impl.dtd.XMLEntityDecl;
 
-    public Menu(String name,int level){
-        this.level = level;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 菜单类
+ */
+public class Menu extends MenuCompoent{
+
+    //菜单可以有多个菜单或子菜单项
+    private List<MenuCompoent> menuCompoentList = new ArrayList<MenuCompoent>();
+
+    public Menu(String name, int level) {
         this.name = name;
-        menuComponentList = new ArrayList<MenuComponent>();
+        this.level = level;
     }
 
     @Override
-    public void add(MenuComponent menuComponent) {
-        menuComponentList.add(menuComponent);
+    public void add(MenuCompoent menuCompoent) {
+        menuCompoentList.add(menuCompoent);
     }
 
     @Override
-    public void remove(MenuComponent menuComponent) {
-        menuComponentList.remove(menuComponent);
+    public void remove(MenuCompoent menuCompoent) {
+        menuCompoentList.remove(menuCompoent);
     }
 
     @Override
-    public MenuComponent getChild(int i) {
-        return menuComponentList.get(i);
+    public MenuCompoent getChild(int index) {
+        return menuCompoentList.get(index);
     }
 
     @Override
     public void print() {
-
-        for (int i = 1; i < level; i++) {
+        for (int i = 0 ; i < level ; i++){
             System.out.print("--");
         }
+        //打印菜单名称
         System.out.println(name);
-        for (MenuComponent menuComponent : menuComponentList) {
-            menuComponent.print();
+        //打印子菜单或者子菜单项名称
+        for (MenuCompoent menuCompoent : menuCompoentList) {
+            menuCompoent.print();
         }
     }
 }
@@ -4213,16 +4226,22 @@ public class Menu extends MenuComponent {
 Menu类已经实现了除了getName方法的其他所有方法，因为Menu类具有添加菜单，移除菜单和获取子菜单的功能。
 
 ```java
-public class MenuItem extends MenuComponent {
+package com.jolan.pattern.combination;
 
-    public MenuItem(String name,int level) {
+/**
+ * 菜单项类。属于叶子节点
+ */
+public class MenuItem extends MenuCompoent{
+
+    public MenuItem(String name, int level) {
         this.name = name;
         this.level = level;
     }
 
     @Override
     public void print() {
-        for (int i = 1; i < level; i++) {
+        //打印菜单项的名称
+        for (int i = 0 ; i < level ; i++){
             System.out.print("--");
         }
         System.out.println(name);
@@ -4231,6 +4250,42 @@ public class MenuItem extends MenuComponent {
 ```
 
 MenuItem是菜单项，不能再有子菜单，所以添加菜单，移除菜单和获取子菜单的功能并不能实现。
+
+Client
+
+```java
+package com.jolan.pattern.combination;
+
+public class Client {
+    public static void main(String[] args) {
+        //创建菜单树
+        MenuCompoent menu1 = new Menu("菜单管理", 2);
+        menu1.add(new MenuItem("页面访问", 3));
+        menu1.add(new MenuItem("展开菜单", 3));
+        menu1.add(new MenuItem("编辑菜单", 3));
+        menu1.add(new MenuItem("删除菜单", 3));
+        menu1.add(new MenuItem("新增菜单", 3));
+        MenuCompoent menu2 = new Menu("权限管理", 2);
+        menu2.add(new MenuItem("页面访问", 3));
+        menu2.add(new MenuItem("提交保存", 3));
+        MenuCompoent menu3 = new Menu("角色管理", 2);
+        menu3.add(new MenuItem("页面访问", 3));
+        menu3.add(new MenuItem("新增角色", 3));
+        menu3.add(new MenuItem("修改角色", 3));
+
+        MenuCompoent compoent = new Menu("系统管理", 1);
+
+        //将二级菜单添加到以及菜单中
+        compoent.add(menu1);
+        compoent.add(menu2);
+        compoent.add(menu3);
+
+        //打印菜单名称
+        compoent.print();
+
+    }
+}
+```
 
 
 
