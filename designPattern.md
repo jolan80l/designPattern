@@ -5963,7 +5963,7 @@ public class Client {
 
 类图如下：
 
-<img src="D:/githubWorkSpace/新建文件夹/笔记/img/观察者模式.png" style="zoom:80%;" />
+<img src="img/观察者模式.png" style="zoom:80%;" />
 
 代码如下：
 
