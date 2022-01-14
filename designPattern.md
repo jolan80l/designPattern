@@ -6578,7 +6578,7 @@ public class ArrayList<E> extends AbstractList<E>
 
 类图如下：
 
-![](D:/githubWorkSpace/新建文件夹/笔记/img/访问者模式.png)
+![](img/访问者模式.png)
 
 代码如下：
 
@@ -6823,7 +6823,7 @@ public class Client {
 
 运行结果：
 
-<img src="D:/githubWorkSpace/新建文件夹/笔记/img/image-20200214215446638.png" style="zoom:70%;" />
+<img src="img/image-20200214215446638.png" style="zoom:70%;" />
 
 这个结果可能出乎一些人的意料了，为什么呢？
 
